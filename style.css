@@ -1,0 +1,20 @@
+/*
+Theme Name: Botega Simple Theme
+Theme URI: https://botega.co.uk
+Author: Tonino Jankov
+Author URI: https://botega.co.uk
+Description: Basic WordPress theme for Sitepoint theme building tutorial
+Text Domain: bsimple
+Version: 1.0.0
+License: GNU General Public License v2 or later
+*/
+
+body.logged-in.admin-bar #mainNav {
+    margin-top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+    body.logged-in.admin-bar #mainNav {
+        margin-top: 46px;
+    }
+}
