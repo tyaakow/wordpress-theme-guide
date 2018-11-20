@@ -1,21 +1,27 @@
 <?php
 /**
  *
- * @package Botega_Scratch_Theme
+ * @package Botega Simple Theme
  */
 
 get_header(); ?>
 
-	<?php
-	if ( have_posts() ) : while ( have_posts() ): the_post(); ?>
+	<div class="col-lg-10 mx-auto col-md-10 col-md-offset-1 single-container">
 
-	<div id="post-<?php the_ID(); ?>">
-		<h2><?php the_title(); ?></h2>
-		<div class="post-excerpt"><?php the_excerpt(); ?></div>
-	</div>
 
-	<?php endwhile;
-	endif;
-	?>
+<?php if ( have_posts() ) : ?>
+
+<?php while ( have_posts() ) : the_post(); ?>
+
+<?php get_template_part( 'partials/content', 'single' ); ?>
+
+
+<?php endwhile; // End of the loop. ?>
+
+
+<?php endif; ?>
+
+</div>
+<!-- /.col-lg-8.col-lg-offset-2.col-md-10.col-md-offset-1 -->
 
 <?php get_footer(); ?>

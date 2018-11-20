@@ -9,6 +9,11 @@ Version: 1.0.0
 License: GNU General Public License v2 or later
 */
 
+
+/*=============================================
+=            general styles            =
+=============================================*/
+
 body.logged-in.admin-bar #mainNav {
     margin-top: 32px;
 }
@@ -18,3 +23,216 @@ body.logged-in.admin-bar #mainNav {
         margin-top: 46px;
     }
 }
+
+ul {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.container .row .top-widget {
+    margin: 18px 0px 48px 0px;
+}
+
+.dyn-sidebar.side.sidebar {
+    margin-bottom: 28px;
+}
+
+.dyn-sidebar.side.sidebar ul {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+.dyn-sidebar.side.sidebar ul li {
+    margin-bottom: 12px;
+    border-bottom: 2px solod #fcfcfc;
+}
+
+.dyn-sidebar.side.sidebar ul li a {
+    color: #333;
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+
+.dyn-sidebar.side.sidebar form#searchform label {
+    display: none;
+}
+
+.side.sidebar form#searchform {
+    overflow: hidden;
+}
+
+.side.sidebar form#searchform input {
+    float: left;
+}
+
+.side.sidebar form#searchform input#s {
+    display: block;
+    height: calc(3.5rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    color: #495057;
+    background-color: #f8f8f8;
+    border: 1px solid #eee;
+    border-radius: .0;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    max-width: 260px;
+}
+
+.side.sidebar form#searchform input#searchsubmit {
+    color: #fff;
+    font-size: 1.6rem;
+    background-color: #555;
+    background-image: none;
+    border: 0px;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    height: calc(3.5rem + 2px);
+}
+
+.single-container,
+.single-container a,
+.single-container p,
+.single-container div,
+.single-container span,
+.single-container li {
+    font-size: 1.7rem;
+    font-weight: 300;
+}
+
+.single-container img,
+.single-container p img,
+.single-container * {
+    max-width: 100%!important;
+}
+
+.single-container a {
+    color: #444;
+}
+
+
+/*=====  End of general styles  ======*/
+
+
+/*=============================================
+=            Headers            =
+=============================================*/
+
+body header#main_header.masthead {
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+body header#main_header.masthead h1.site-title {
+    font-weight: 800;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 5rem;
+}
+
+body header#main_header.masthead span.subheading {
+    font-size: 2.5rem;
+    font-weight: 100;
+    line-height: 1.1;
+    display: block;
+    margin: 18px 0 0;
+    font-family: Lora, 'Times New Roman', serif;
+    font-style: italic;
+}
+
+
+/*=====  End of Headers  ======*/
+
+
+/*=============================================
+=            archives, lists            =
+=============================================*/
+
+
+/*----------  home  ----------*/
+
+.home .post-preview.post {
+    margin-bottom: 46px;
+    overflow: hidden;
+}
+
+.home .post-preview header {
+    margin-bottom: 24px;
+}
+
+.home .post-preview header h2.entry-title {
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.home .post-preview header .entry-meta {
+    font-family: Lora, 'Times New Roman', serif;
+    font-size: 1.7rem;
+    color: #555;
+}
+
+.home .post-preview header h2.entry-title a {
+    font-size: 3rem;
+    color: #333;
+    font-weight: 800;
+}
+
+.home .post-preview header .entry-meta a {
+    color: #444;
+}
+
+.home .post-preview .post-thumbnail {
+    float: left;
+    padding: 8px 32px 16px 0px;
+}
+
+.home .post-preview .excerpt-item p {
+    font-size: 1.8rem;
+    font-weight: 300;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+
+/*=====  End of archives, lists  ======*/
+
+
+/*=============================================
+=            Footer            =
+=============================================*/
+
+footer#footer {
+    min-height: 480px;
+    width: 100%;
+    background: #333;
+}
+
+footer,
+#footer *,
+#footer ul li a {
+    color: #fff;
+}
+
+footer#footer a {
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+footer#footer #f_2 {
+    padding-left: 28px;
+}
+
+footer#footer #f_1 a,
+footer#footer #f_2 a,
+footer#footer #f_3 a {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.row.b_c_s {
+    padding: 68px 0px;
+}
+
+
+/*=====  End of Footer  ======*/

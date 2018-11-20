@@ -14,10 +14,70 @@ function bsimple_scripts() {
     wp_enqueue_script( 'bsimple-jq', get_template_directory_uri() . '/js/jquery.min.js');
     wp_enqueue_script( 'bsimple-bootstrap', get_template_directory_uri() . '/js/bootstrap.bundle.min.js');
     wp_enqueue_script( 'bsimple-clean', get_template_directory_uri() . '/js/clean-blog.min.js');
+
+
+
+    $css = '';
+	$home_header_bg_image = get_theme_mod( 'home_header_bg_img' , get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg'  );
+	$frontpage_header_bg_image = get_theme_mod( 'frontpage_header_bg_img' , get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg'  );
+    $global_header_bg_image = get_theme_mod( 'global_header_bg_img' , get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg'  );
+    
+	$css .= ( !empty($home_header_bg_image) ) ? sprintf('
+	#main_header.phome {
+		background: url(%s) no-repeat center;
+	}
+    ', $home_header_bg_image ) : '';
+
+	$css .= ( !empty($frontpage_header_bg_image) ) ? sprintf('
+	#main_header.pfront {
+		background: url(%s) no-repeat center;
+	}
+    ', $frontpage_header_bg_image ) : '';
+
+	$css .= ( !empty($global_header_bg_image) ) ? sprintf('
+	#main_header.pglobal {
+		background: url(%s) no-repeat center;
+	}
+    ', $global_header_bg_image ) : '';
+
+	if ( $css ) {
+		wp_add_inline_style( "bsimple-style"  , $css );
+	}
 }    
 
 add_action( 'wp_enqueue_scripts', 'bsimple_scripts' );
 
+
+function custom_excerpt_length( $length ) {
+	return 40;
+}
+add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
+
+
+
+function my_widget_title($title){
+    return null;
+}
+add_filter('widget_title','my_widget_title');
+
+
+
+
+
+
+
+
+
+
+add_theme_support( 'post-thumbnails' );
+
+add_image_size( 'list-thumb-1', 1140, 480, true);
+add_image_size( 'list-thumb-2', 730, 400, true);
+
+add_image_size( 'small-list-thumb-4', 480, 370, true);
+add_image_size( 'small-list-thumb-1', 400, 200, true);
+add_image_size( 'small-list-thumb-2', 300, 200, true);
+add_image_size( 'small-list-thumb-3', 220, 140, true);
 
 
 
@@ -49,9 +109,25 @@ function dynamic_header(){
 
     ?>
 
-    <?php if (is_front_page()){ ?>
+    <?php if (is_home()){ ?>
 
-        <header class="masthead" style="background:#ccc;">
+        <header class="masthead phome" id="main_header">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="site-heading">
+                        <h1 class="site-title"><?php bloginfo( 'name' ); ?></h1>
+                        <span class="subheading"><?php bloginfo( 'description', 'raw' );?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+    <?php } else if (is_front_page()){ ?>
+
+        <header class="masthead pfront" id="main_header">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
@@ -65,32 +141,18 @@ function dynamic_header(){
             </div>
         </header>
 
-    <?php } else if (is_home()){ ?>
+    <?php } else if (is_page()){ 
+        
+        ?>
 
-        <header class="masthead" style="background:#ccc;">
+        <header class="masthead ppage" id="main_header" style="background-image:url(<?php echo get_the_post_thumbnail_url($post, "full" ); ?>)">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="site-heading">
-                        <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-                        <span class="subheading"><?php get_bloginfo( 'description', 'display' );?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-    <?php } else if (is_page()){ ?>
-
-        <header class="masthead" style="background:#ccc;">
-            <div class="overlay"></div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                        <div class="site-heading">
-                        <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-                        <span class="subheading"><?php get_bloginfo( 'description', 'display' );?></span>
+                        <h1 class="site-title"><?php the_title() ?></h1>
+                        <span class="subheading"><?php echo get_post_meta($post->ID, "subtitle_", true);?></span>
                         </div>
                     </div>
                 </div>
@@ -99,14 +161,14 @@ function dynamic_header(){
 
     <?php } else if (is_single()){ ?>
 
-        <header class="masthead" style="background:#ccc;">
+        <header class="masthead psingle" id="main_header">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="site-heading">
-                        <h1 class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></h1>
-                        <span class="subheading"><?php get_bloginfo( 'description', 'display' );?></span>
+                        <h1 class="site-title"><?php the_title() ?></h1>
+                        <span class="subheading"><?php echo get_post_meta($post->ID, "subtitle_", true);?></span>
                         </div>
                     </div>
                 </div>
@@ -115,7 +177,7 @@ function dynamic_header(){
 
     <?php } else { ?>
 
-        <header class="masthead" style="background:#ccc;">
+        <header class="masthead pglobal" id="main_header">
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
@@ -159,7 +221,7 @@ if ( ! function_exists( 'bsimple_posted_on' ) ) :
 
 		$posted_on = sprintf(
 			/* translators: %s: post date. */
-			esc_html_x( 'Posted on %s', 'post date', 'botega_st' ),
+			esc_html_x( '%s', 'post date', 'botega_st' ),
 			'<a href="' . esc_url( get_permalink() ) . '" rel="bookmark">' . $time_string . '</a>'
 		);
 
@@ -222,6 +284,283 @@ if ( ! function_exists( 'bsimple_post_thumbnail' ) ) :
 		endif; // End is_singular().
 	}
 endif;
+
+
+
+
+
+
+
+
+
+
+
+// Register custom sidebars
+function sidebar_register() {
+
+    $args = array(
+        'name'          => __( 'home_header', 'bsimple' ),
+        'description'   => __( 'home_header', 'bsimple' ),
+        'id'            => 'h_h',
+        'class'         => 'home_header',
+        'before_widget' => ' <div class="dyn-sidebar side sidebar">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'archive_sidebar_1', 'bsimple' ),
+        'description'   => __( 'Archive Sidebar no 1', 'bsimple' ),
+        'id'            => 'a_s_1',
+        'class'         => 'archive_sidebar_1',
+        'before_widget' => ' <div class="dyn-sidebar side sidebar">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'page_sidebar_1', 'bsimple' ),
+        'description'   => __( 'Pages Sidebar no 1', 'bsimple' ),
+        'id'            => 'p_s_1',
+        'class'         => 'page_sidebar_1',
+        'before_widget' => ' <div class="dyn-sidebar side sidebar">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'page_sidebar_2_top', 'bsimple' ),
+        'description'   => __( 'Pages Sidebar 2 - Top', 'bsimple' ),
+        'id'            => 'p_s_2_t',
+        'class'         => 'page_sidebar_2_top',
+        'before_widget' => '   <div class="col-lg-8 mx-auto top-widget col-md-10 ">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'archive_sidebar_2_top', 'bsimple' ),
+        'description'   => __( 'Archive Sidebar 2 - Top', 'bsimple' ),
+        'id'            => 'a_s_2_t',
+        'class'         => 'archive_sidebar_2_top',
+        'before_widget' => '   <div class="col-lg-8 mx-auto top-widget col-md-10 ">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'home_sidebar_1', 'bsimple' ),
+        'description'   => __( 'Home Sidebar 1 ', 'bsimple' ),
+        'id'            => 'h_s_1',
+        'class'         => 'home_sidebar_1',
+        'before_widget' => ' <div class="dyn-sidebar side sidebar">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'home_sidebar_2_top', 'bsimple' ),
+        'description'   => __( 'Home Sidebar 2 Top', 'bsimple' ),
+        'id'            => 'h_s_2_t',
+        'class'         => 'home_sidebar_2_top',
+        'before_widget' => '   <div class="col-lg-8 mx-auto top-widget col-md-10 ">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'bottom_center_sidebar', 'bsimple' ),
+        'description'   => __( 'Bottom Center Sidebar', 'bsimple' ),
+        'id'            => 'b_c_s',
+        'class'         => 'bottom_center_sidebar',
+        'before_widget' => '<div id="bottom-center-sidebar">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'footer_1', 'bsimple' ),
+        'description'   => __( 'Footer 1', 'bsimple' ),
+        'id'            => 'f_1',
+        'class'         => 'footer_1',
+        'before_widget' => '<div class="footer-widget-item">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'footer_2', 'bsimple' ),
+        'description'   => __( 'Footer 2', 'bsimple' ),
+        'id'            => 'f_2',
+        'class'         => 'footer_2',
+        'before_widget' => '<div class="footer-widget-item">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+    $args = array(
+        'name'          => __( 'footer_3', 'bsimple' ),
+        'description'   => __( 'Footer 3', 'bsimple' ),
+        'id'            => 'f_3',
+        'class'         => 'footer_2',
+        'before_widget' => '<div class="footer-widget-item">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widgettitle">',
+        'after_title'   => '</h2>',
+    );
+    register_sidebar($args);
+
+}
+add_action( 'widgets_init', 'sidebar_register' );
+
+
+
+
+
+
+
+
+
+/**
+ * Customizer sections
+ */
+
+function register_customizer_controls( $wp_customize ) {
+	// Create custom panel.
+	$wp_customize->add_panel( 'basic_stylings', array(
+		'priority'       => 70,
+		'theme_supports' => '',
+		'title'          => __( 'Basic Stylings', 'bsimple' ),
+		'description'    => __( 'Set main website headers.', 'bsimple' ),
+    ) );
+    
+
+
+	$wp_customize->add_section( 'frontpage_settings' , array(
+		'title'      => __( 'Frontpage Settings','bsimple' ),
+		'panel'      => 'basic_stylings',
+		'priority'   => 20,
+    ) );
+    
+   
+	// Add setting.
+	$wp_customize->add_setting( 'frontpage_header_bg_img', array(
+		'default'     => get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg',
+	) );
+
+	// Add control.
+	$wp_customize->add_control( new WP_Customize_Image_Control(
+		$wp_customize, 'frontpage_background_image', array(
+			  'label'      => __( 'Add Home Header Background Image Here, the width should be approx 1900px', 'bsimple' ),
+			  'section'    => 'frontpage_settings',
+			  'settings'   => 'frontpage_header_bg_img',
+			  )
+	) );
+
+
+    
+    
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	$wp_customize->add_section( 'home_settings' , array(
+		'title'      => __( 'Home Settings','bsimple' ),
+		'panel'      => 'basic_stylings',
+		'priority'   => 20,
+    ) );
+    
+
+	// Add setting.
+	$wp_customize->add_setting( 'home_header_bg_img', array(
+		'default'     => get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg',
+    ) );
+    
+	// Add control.
+	$wp_customize->add_control( new WP_Customize_Image_Control(
+		$wp_customize, 'home_background_image', array(
+			  'label'      => __( 'Add Home Header Background Image Here, the width should be approx 1900px', 'bsimple' ),
+			  'section'    => 'home_settings',
+			  'settings'   => 'home_header_bg_img',
+			  )
+	) );
+
+
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+	$wp_customize->add_section( 'global_settings' , array(
+		'title'      => __( 'Global Settings','bsimple' ),
+		'panel'      => 'basic_stylings',
+		'priority'   => 20,
+    ) );
+    
+
+	// Add setting.
+	$wp_customize->add_setting( 'global_header_bg_img', array(
+		'default'     => get_stylesheet_directory_uri() . '/images/basic_header_bg.jpg',
+	) );
+
+	$wp_customize->add_control( new WP_Customize_Image_Control(
+		$wp_customize, 'global_background_image', array(
+			  'label'      => __( 'Add Global Header Background Image Here, the width should be approx 1900px', 'bsimple' ),
+			  'section'    => 'global_settings',
+			  'settings'   => 'global_header_bg_img',
+			  )
+	) );
+
+    
+}
+
+
+
+add_action( 'customize_register', 'register_customizer_controls' );
+/*
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
